@@ -1,0 +1,12 @@
+version: '2.0'
+
+services:
+  h.la-server:
+    build:
+      context: ./h.la_server
+      dockerfile: ./Dockerfile
+    container_name: h.la_sql
+    privileged: true
+    ports:
+      - 3002:80
+    restart: "unless-stopped"

@@ -1,0 +1,16 @@
+version: '2.0'
+
+services:
+  h.la-sql-only:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: h.la_sql_only
+    volumes:
+      #- /usr/src/app/node_modules
+      #- ./app_copy:/usr/src/app
+      - ./segments:/usr/src/app/segments
+    privileged: true
+    ports:
+      - 3001:80
+    restart: "unless-stopped" #"unless-stopped"

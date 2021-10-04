@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>
+    <%= title %>
+  </h1>
+  <p>Welcome to <%= title %>
+  </p>
+  <p><a href="/list">최신순</a></p>
+  <p><a href="/info/random">랜덤</a></p>
+  <p><input id="number" type="number" /><button onclick="moveNumber()">번호로 이동</button></p>
+  <form method="GET" action="/search">
+    검색: <input id="search" name="search" type="text" /><br />
+    태그: <input id="tag" name="tag" list="tag-recommend" autocomplete="off" type="text" /><br />
+    <input name="tagids" type="hidden" />
+    <input type="submit" value="검색" />
+  </form>
+  <p id="tags"></p>
+  <script src="/javascripts/sql.js"></script>
+  <script>
+    document.getElementById("tag").addEventListener('keyup', (event) => CreateTagAutocomplete(event.target.value));
+    document.getElementById("tag").addEventListener('input', async function (event) {
+      if (!(event instanceof InputEvent) || event.inputType === 'insertReplacementText') {
+        event.preventDefault();
+        let data = GetTagByFull(event.target.value);
+        event.target.value = "";
+        data = await data;
+        if (!window.tagids)
+          window.tagids = [];
+        window.tagids.push(data.rowid);
+        let tagNode = document.createElement("span");
+        tagNode.innerText = data.full;
+        tagNode.style = "background: #cbcbcb;border-radius: 4px;padding: 2px;margin: 2px;";
+        document.getElementById("tags").appendChild(tagNode);
+      }
+    });
+    document.getElementsByTagName("form")[0].addEventListener('submit', function (event) {
+      document.getElementsByName("tagids")[0].value = window.tagids.join();
+    });
+    function moveNumber() {
+      location.href = "/info/" + document.getElementById("number").value;
+    }
+  </script>
+</body>
+
+</html>

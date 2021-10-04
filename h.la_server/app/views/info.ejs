@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= number %> - kitomi.la
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <script>
+        window.onload = async () => {
+            document.write(`<p><button onclick="window.location.href='/'">메인 페이지</button></p>`);
+            let id = parseInt(window.location.pathname.split('/', 3)[2]);
+            this.data;
+            if (isNaN(id))
+                this.data = await GetFullDataFromGallery(await RandomGallery());
+            else
+                this.data = await GetFullDataFromGallery(await GetGallery(id));
+            document.write('<button onclick="newWindow()" style="width: 100%;">새 창에서</button>');
+            document.write(...this.data.tags.map(x => `<p>${x.full}</p>`));
+            document.write(`<div style="overflow-wrap: break-word;">${JSON.stringify(data)}</div>`);
+            let image = await GetImage(this.data.files[0]);
+            document.body.innerHTML = '';
+            document.write(`<p><button onclick="window.location.href='/'">메인 페이지</button></p>`);
+            if (this.data.tags.some(x => x.full.match(blocks.join('|')))){
+                document.write(`<img id="mainImage" src="${image}" style="max-width: 100%; max-height: 100%;filter: blur(10px);"/>`);
+                document.write(`<button onclick="document.getElementById('mainImage').style = 'max-width: 100%; max-height: 100%;'">블러 해제</button>`)
+            }
+            else
+                document.write(`<img src="${image}" style="max-width: 100%; max-height: 100%;"/>`);
+            document.write('<button onclick="newWindow()" style="width: 100%;">새 창에서</button>');
+            document.write('<div id="info">');
+            document.write(`<p>number: ${this.data.info.id}</p>`);
+            document.write(`<p>title: ${this.data.info.title}</p>`);
+            document.write(`<p>artist: ${this.data.info.artist}</p>`);
+            document.write('</div>');
+            document.write(...this.data.tags.map(x => `<p>${x.full}</p>`));
+            // document.write(`<div style="overflow-wrap: break-word;">${JSON.stringify(data)}</div>`);
+            document.write('<button id="more" onclick="doMore()" style="width: 100%;">사진 더</button>');
+        }
+        function newWindow() {
+            window.open(`http://choim.in:3002/info/${this.data.info.id}`);
+        }
+        async function doMore() {
+            document.getElementById("more").style = "display: none;";
+            for (var i = 1; i < this.data.files.length; i++) {
+                let image = await GetImage(this.data.files[i]);
+                document.write(`<img src="${image}" style="max-width: 100%; max-height: 100%;"/>`);
+            }
+        }
+    </script>
+    <script src="/javascripts/sql.js"></script>
+</body>
+
+</html>

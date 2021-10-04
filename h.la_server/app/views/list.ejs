@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        page - kitomi.la
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <script>
+        window.onload = async () => {
+            this.page = parseInt(new URLSearchParams(window.location.search).get("page")) || 1;
+            this.data = await OrderedGallery((this.page - 1) * 25);
+            document.write(`<p><button onclick="window.location.href='/'">메인 페이지</button></p>`);
+            if (this.page > 1)
+                document.write(`<button onclick="prev()">이전</button>`);
+            document.write(`<button onclick="next()">다음</button>`);
+            for (var row of this.data) {
+                document.write("<div>")
+                document.write(`<span id="${row.id}" style="background: #EEEEEE; display: inline-block;">`);
+                document.write(`<p><a href="/info/${row.id}" target="_blank">${row.title}</a></p>`);
+                let rndkey = Math.floor(Math.random() * 0xFFFFFFFFFFFFFFFF).toString(16);
+                document.write(`<img id="${rndkey}" style="max-width: 100%; height: 25%;"/>`);
+                setTimeout((fid, key) => {
+                    GetFile(fid).then(x => GetImage(x)).then(x => {
+                        console.log(document.getElementById(key).src = x);
+                    });
+                }, 0, parseInt(row.file_ids.split(',')[0]), rndkey);
+                document.write("</span>")
+                document.write("</div>")
+            }
+            if (this.page > 1)
+                document.write(`<button onclick="prev()">이전</button>`);
+            document.write(`<button onclick="next()">다음</button>`);
+        }
+        function next() {
+            params = new URLSearchParams(window.location.search);
+            page = params.get("page") || 1;
+            params.set("page", page + 1);
+            window.location.search = params.toString();
+        }
+        function prev() {
+            params = new URLSearchParams(window.location.search);
+            page = params.get("page") || 1;
+            params.set("page", page - 1);
+            window.location.search = params.toString();
+        }
+    </script>
+    <script src="/javascripts/sql.js"></script>
+</body>
+
+</html>

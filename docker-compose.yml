@@ -1,0 +1,24 @@
+version: '2.0'
+
+services:
+  h.la-sql:
+    build:
+      context: ./h.la_sql
+      dockerfile: ./Dockerfile
+    container_name: h.la_sql
+    volumes:
+      #- ./h.la_sql/app_copy:/usr/src/app
+      - ./h.la_sql/segments:/usr/src/app/segments
+    privileged: true
+    ports:
+      - 3001:80
+    restart: "unless-stopped" #"unless-stopped"
+  h.la-server:
+    build:
+      context: ./h.la_server
+      dockerfile: ./Dockerfile
+    container_name: h.la_server
+    privileged: true
+    ports:
+      - 3002:80
+    restart: "unless-stopped"
